@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
-
+// import { CurrentAccountOwnerContext } from '../src/context/CurrentOwnerContext';
+// import { ICurrentAccountOwner, currentAccountOwner } from './@types/accountOwner';
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  // const [currentAccountOwner, setCurrentAccountOwner] = useState({
+  //   _id: '',
+  //   firstName: '',
+  //   lastName: '',
+  //   email: '',
+  //   primaryAddress: {
+  //     street: '',
+  //     zipcode: '',
+  //     city: '',
+  //     country: ''
+  //   },
+  //   password: '',
+  //   accounts: [''],
+  //   createdAt: '',
+  //   updatedAt: '',
+  //   __v: 0
+  // });
+
+  // return (
+  //   <CurrentAccountOwnerContext.Provider value={{ currentAccountOwner, setCurrentAccountOwner }}>
+  //     <div>Hi everybody!</div>
+  //   </CurrentAccountOwnerContext.Provider>
+  // );
+  return <div>Hi there</div>;
 }
 
 export default App;
