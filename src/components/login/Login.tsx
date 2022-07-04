@@ -1,47 +1,74 @@
-import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
+//import * as React from 'react';
+import React, { useContext, useState, MouseEvent, ChangeEvent } from 'react';
+import './Login.scss';
 import { SimpleContext } from '../../context/SimpleContext';
 
 export default function Login() {
-  const [effected, setEffected] = useState('stop');
-  const { valueA, setValueA } = useContext(SimpleContext);
+  //states for API call
+  const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
+  const [responseMessage, setResponseMessage] = useState({ message: '' });
+  const [responseError, setResponseError] = useState({ error: '' });
 
-  useEffect(() => {
-    if (setValueA) {
-      setValueA({ testing: 'test' });
-    }
-  }, [effected]);
+  //form inputs
+  const [emailInput, setEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
 
-  // const accountOwner = useContext(AccountContext);
-  // console.log(accountOwner);
-  // const { accountOwner, getAccountOwner } = useContext(AccountContext) as accountOwnerType;
-  // getAccountOwner({
-  //   _id: 'stuff',
-  //   firstName: 'Hallie',
-  //   lastName: 'Gallie',
-  //   email: 'dancingqueen@aol.com',
-  //   primaryAddress: {
-  //     street: '127 Clifton Place',
-  //     zipcode: '44896',
-  //     city: 'Boston',
-  //     country: 'United States'
-  //   },
-  //   password: 'randomstuff',
-  //   accounts: ['none'],
-  //   createdAt: 'now',
-  //   updatedAt: 'later',
-  //   __v: 0
-  // });
-  console.log(valueA);
+  function loginAccountOwner(e: MouseEvent<HTMLElement>) {
+    e.preventDefault();
+    const config = {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({
+        email: emailInput,
+        password: passwordInput
+      })
+    };
+
+    fetch('http://localhost:3030/login', config)
+      .then((response) => response.json())
+      .then((response) => {
+        if (setCurrentOwner && response._id) {
+          setCurrentOwner(response);
+        } else if (response.error) {
+          setResponseError(response);
+        } else if (response.message) {
+          setResponseMessage(response);
+        }
+      });
+  }
+
+  // useEffect(()=> {
+  //   if(setValueA && )
+  // }, [effected])
   return (
     <div>
       <form>
         <label>
           Please enter your email address
-          <input type="text" placeholder="example@email.com" />
+          <input
+            type="text"
+            placeholder="example@email.com"
+            value={emailInput}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setEmailInput(e.target.value)}
+          />
         </label>
+        <label>
+          Please enter your password
+          <input
+            type="password"
+            placeholder="password"
+            value={passwordInput}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setPasswordInput(e.target.value)}
+          />
+        </label>
+        <button onClick={(e) => loginAccountOwner(e)}>Click to login</button>
       </form>
-      {/* <p> {valueA} </p> */}
+      <div>
+        {/* This needs to be rerendered when user uses correct email/pass */}
+        {responseError.error && (
+          <h4>{responseError ? responseError.error : responseMessage.message}</h4>
+        )}
+      </div>
     </div>
   );
 }
