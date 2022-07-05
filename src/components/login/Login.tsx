@@ -29,10 +29,10 @@ export default function Login() {
       .then((response) => {
         if (setCurrentOwner && response._id) {
           setCurrentOwner(response);
-        } else if (response.error) {
+        } else if (response.error.message) {
+          setResponseMessage(response.error);
+        } else if (response.error && !response.error.message) {
           setResponseError(response);
-        } else if (response.message) {
-          setResponseMessage(response);
         }
       });
   }
