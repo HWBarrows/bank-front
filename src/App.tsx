@@ -1,12 +1,12 @@
 import './App.scss';
-import Login from './components/login/Login';
 import SimpleContextProvider from './context/SimpleContext';
+import BankRoutes from '../src/components/bankRoutes/BankRoutes';
 
 export default function App() {
   return (
     <div>
       <SimpleContextProvider>
-        <Login />
+        <BankRoutes />
       </SimpleContextProvider>
     </div>
   );

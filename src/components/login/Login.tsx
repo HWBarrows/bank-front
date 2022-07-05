@@ -1,7 +1,7 @@
-//import * as React from 'react';
 import React, { useContext, useState, MouseEvent, ChangeEvent } from 'react';
-import './Login.scss';
+import { NavLink, Navigate } from 'react-router-dom';
 import { SimpleContext } from '../../context/SimpleContext';
+import './Login.scss';
 
 export default function Login() {
   //states for API call
@@ -37,9 +37,6 @@ export default function Login() {
       });
   }
 
-  // useEffect(()=> {
-  //   if(setValueA && )
-  // }, [effected])
   return (
     <div>
       <form>
@@ -69,6 +66,7 @@ export default function Login() {
           <h4>{responseError ? responseError.error : responseMessage.message}</h4>
         )}
       </div>
+      {/* <NavLink to="/home"> Click to go home</NavLink> */}
     </div>
   );
 }
