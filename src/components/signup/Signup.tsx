@@ -1,10 +1,8 @@
 import { useContext } from 'react';
 import { SimpleContext } from '../../context/SimpleContext';
-import './Home.scss';
 
-export default function Home() {
+export default function Signup() {
   const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
-  console.log({ home: currentOwner });
-
-  return <div className="homeWrapper">Hola von Hause</div>;
+  console.log({ signup: currentOwner });
+  return <div>Signup here</div>;
 }

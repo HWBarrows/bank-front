@@ -37,6 +37,7 @@ export default function Login() {
       });
   }
 
+  console.log({ login: currentOwner });
   return (
     <div>
       <form>

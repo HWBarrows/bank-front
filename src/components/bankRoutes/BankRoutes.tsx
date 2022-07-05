@@ -5,6 +5,7 @@ import Home from '../home/Home';
 import LandingPage from '../landingPage/LandingPage';
 import Login from '../login/Login';
 import Shopping from '../shopping/Shopping';
+import Signup from '../signup/Signup';
 
 export default function BankRoutes() {
   const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
@@ -14,6 +15,7 @@ export default function BankRoutes() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/shopping" element={<Shopping />} />
+      <Route path="signup" element={<Signup />} />
       {/* <Route path="/login" element={<Login />} /> */}
 
       {/* <Route path="/redirect" element={<Navigate to="/" />} /> */}
