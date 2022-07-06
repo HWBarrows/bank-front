@@ -1,4 +1,4 @@
-import React, { useReducer, ChangeEvent, useState, useContext } from 'react';
+import React, { useReducer, ChangeEvent, useContext } from 'react';
 import { SimpleContext } from '../../context/SimpleContext';
 import { NavLink } from 'react-router-dom';
 import './Signup.scss';
@@ -74,8 +74,8 @@ export default function CreateNew() {
       .then((response) => {
         if (response.error) {
           alert(response.error);
-        } else if (response._id) {
-          console.log(response);
+        } else if (response._id && setCurrentOwner) {
+          setCurrentOwner(response);
         }
       });
   }

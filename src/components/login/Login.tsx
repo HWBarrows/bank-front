@@ -1,5 +1,5 @@
 import React, { useContext, useState, MouseEvent, ChangeEvent } from 'react';
-import { NavLink, Navigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { SimpleContext } from '../../context/SimpleContext';
 import './Login.scss';
 
@@ -67,7 +67,7 @@ export default function Login() {
           <h4>{responseError ? responseError.error : responseMessage.message}</h4>
         )}
       </div>
-      {/* <NavLink to="/home"> Click to go home</NavLink> */}
+      <NavLink to="/"> Click to go landing Page</NavLink>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { SimpleContext } from '../../context/SimpleContext';
 import Home from '../home/Home';
@@ -8,20 +8,24 @@ import Shopping from '../shopping/Shopping';
 import Signup from '../signup/Signup';
 
 export default function BankRoutes() {
-  const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
-  // const [cartIsEmpty] = useState(false);
+  const { currentOwner } = useContext(SimpleContext);
+
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/shopping" element={<Shopping />} />
-      <Route path="signup" element={<Signup />} />
+      {/* <Route path="signup" element={<Signup />} /> */}
       {/* <Route path="/login" element={<Login />} /> */}
 
       {/* <Route path="/redirect" element={<Navigate to="/" />} /> */}
       <Route
         path="/login"
         element={currentOwner && currentOwner.firstName.length > 1 ? <Home /> : <Login />}
+      />
+      <Route
+        path="/signup"
+        element={currentOwner && currentOwner.firstName.length > 1 ? <Home /> : <Signup />}
       />
     </Routes>
   );
