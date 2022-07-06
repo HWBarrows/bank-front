@@ -14,6 +14,7 @@ export default function CreateNew() {
       password: string;
       street: string;
       city: string;
+      state: string;
       zipcode: string;
       country: string;
     },
@@ -37,6 +38,7 @@ export default function CreateNew() {
     password: '',
     street: '',
     city: '',
+    state: '',
     zipcode: '',
     country: ''
   };
@@ -62,6 +64,7 @@ export default function CreateNew() {
       primaryAddress: {
         street: formState.street,
         city: formState.city,
+        state: formState.state,
         zipcode: formState.zipcode,
         country: formState.country
       }
@@ -141,6 +144,15 @@ export default function CreateNew() {
               name="city"
               placeholder="city"
               value={formState.city}
+              onChange={(e) => getText(e)}
+            />
+          </label>
+          <label>
+            <input
+              type="text"
+              name="state"
+              placeholder="state, if applicable"
+              value={formState.state}
               onChange={(e) => getText(e)}
             />
           </label>
