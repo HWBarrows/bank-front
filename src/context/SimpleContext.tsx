@@ -9,6 +9,7 @@ interface AppContextInterface {
     lastName: string;
     email: string;
     primaryAddress: {
+      state: string;
       street: string;
       zipcode: string;
       city: string;
@@ -40,6 +41,7 @@ const SimpleContextProvider = (props: BoxProps) => {
       street: '',
       zipcode: '',
       city: '',
+      state: '',
       country: ''
     },
     password: '',
