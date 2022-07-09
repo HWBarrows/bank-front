@@ -4,7 +4,7 @@ import { SimpleContext } from '../../context/SimpleContext';
 import './Home.scss';
 
 export default function Home() {
-  const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
+  const { currentOwner } = useContext(SimpleContext);
   const [accountInfo, setAccountInfo] = useState<{
     _id: '';
     accountOwner: '';
@@ -20,10 +20,14 @@ export default function Home() {
         currency: '';
       }
     ];
+    cardNumber?: '';
+    cardSecurityCode?: 0;
+    cardExpiry?: '';
     createdAt: '';
     updatedAt: '';
     __v: 0;
   }>();
+
   const valid = currentOwner && currentOwner.firstName.length > 1;
 
   function getAccountInfo(e: MouseEvent<HTMLLIElement>) {
@@ -55,7 +59,8 @@ export default function Home() {
                 {currentOwner.primaryAddress.zipcode}
               </li>
             </ul>
-
+          </div>
+          <div className="accountsWrapper">
             <div className="ownerAccounts">
               <h4>Accounts</h4>
               <ul>
@@ -65,14 +70,26 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
+              cards
             </div>
-          </div>
-          <div className="accountInfo">
-            <ul>
-              {accountInfo?.accountActivity.map((item, index) => (
-                <li key={index + 1}>{item.timeStamp}</li>
-              ))}
-            </ul>
+
+            <div className="accountInfo">
+              <ul>
+                {accountInfo?.accountActivity.map((item, index) => (
+                  <li key={index + 1}>
+                    <div className="vendor">
+                      <h5>{item.from}</h5>
+                      <p>{item.type}</p>
+                    </div>
+
+                    <div className="amount">
+                      {item.amount} {item.currency}
+                    </div>
+                    {/* <div className="time">{item.timeStamp}</div>  */}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       )}

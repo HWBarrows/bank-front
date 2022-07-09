@@ -1,14 +1,50 @@
 .homeWrapper {
-    border: 1px solid aqua;
+    //border: 1px solid aqua;
+    padding-left: 2.5vw;
+    padding-right: 2.5vw;
+    ul{
+        list-style: none;
+    }
 }
 
-.ownerInfo {
 
+.ownerInfo {
+    border: 1px solid blue;
     ul{
-        border: 1px solid greenyellow;
-        list-style: none;
         li:first-child {
             margin-bottom: 1em;
         }
     }
+}
+
+.accountsWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.accountInfo {
+    border: 1px solid green;
+    width: 55%;
+    ul {
+        li {
+            //border: 1px solid fuchsia;
+            display: flex;
+            justify-content: space-between;
+            
+        }
+    }
+}
+.vendor {
+    display: flex;
+    flex-direction: column;
+    h5 {
+        margin-bottom: 0;
+    }
+    p{
+      margin: 0; 
+    }
+}
+
+.amount {
+    display: flex;
+    align-items: center;
 }

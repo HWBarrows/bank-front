@@ -6,7 +6,6 @@ import './Login.scss';
 export default function Login() {
   //states for API call
   const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
-  const [responseMessage, setResponseMessage] = useState({ message: '' });
   const [responseError, setResponseError] = useState({ error: '' });
 
   //form inputs
@@ -29,15 +28,12 @@ export default function Login() {
       .then((response) => {
         if (setCurrentOwner && response._id) {
           setCurrentOwner(response);
-        } else if (response.error.message) {
-          setResponseMessage(response.error);
-        } else if (response.error && !response.error.message) {
+        } else if (response.error) {
           setResponseError(response);
         }
       });
   }
 
-  console.log({ login: currentOwner });
   return (
     <div>
       <form>
@@ -61,12 +57,7 @@ export default function Login() {
         </label>
         <button onClick={(e) => loginAccountOwner(e)}>Click to login</button>
       </form>
-      <div>
-        {/* This needs to be rerendered when user uses correct email/pass */}
-        {responseError.error && (
-          <h4>{responseError ? responseError.error : responseMessage.message}</h4>
-        )}
-      </div>
+      <div>{responseError && <h4>{responseError?.error}</h4>}</div>
       <NavLink to="/"> Click to go landing Page</NavLink>
     </div>
   );

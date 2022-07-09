@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import './Signup.scss';
 
 export default function CreateNew() {
-  const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
+  const { setCurrentOwner } = useContext(SimpleContext);
 
   function formReducer(
     state: {
