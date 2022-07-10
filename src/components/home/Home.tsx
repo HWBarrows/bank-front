@@ -14,7 +14,8 @@ export default function Home() {
     accountActivity: [
       {
         timeStamp: '';
-        from: '';
+        from?: '';
+        to?: '';
         type: '';
         amount: 0;
         currency: '';
@@ -28,7 +29,8 @@ export default function Home() {
     __v: 0;
   }>();
 
-  const valid = currentOwner && currentOwner.firstName.length > 1;
+  const validOwner = currentOwner && currentOwner.firstName.length > 1;
+  const validAccountActivity = accountInfo && accountInfo.accountActivity.length > 1;
 
   function getAccountInfo(e: MouseEvent<HTMLLIElement>) {
     const target = e.target as Element;
@@ -40,12 +42,12 @@ export default function Home() {
 
   return (
     <div className="homeWrapper">
-      {!valid && (
+      {!validOwner && (
         <NavLink to="/">
           No Account Found. Please return to landing page to register or login
         </NavLink>
       )}
-      {valid && (
+      {validOwner && (
         <div className="ownerWrapper">
           <div className="ownerInfo">
             <h3>
@@ -59,10 +61,13 @@ export default function Home() {
                 {currentOwner.primaryAddress.zipcode}
               </li>
             </ul>
+            <h1>Create Logout function</h1>
+            logout
           </div>
           <div className="accountsWrapper">
             <div className="ownerAccounts">
               <h4>Accounts</h4>
+              <h1>Create new account</h1>
               <ul>
                 {currentOwner.accounts.map((item, index) => (
                   <li key={index} id={item} onClick={(e) => getAccountInfo(e)}>
@@ -70,25 +75,33 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
+              {/* add a button to request card or show card info */}
+              <h1>Request new card</h1>
               cards
             </div>
 
             <div className="accountInfo">
-              <ul>
-                {accountInfo?.accountActivity.map((item, index) => (
-                  <li key={index + 1}>
-                    <div className="vendor">
-                      <h5>{item.from}</h5>
-                      <p>{item.type}</p>
-                    </div>
+              {!validAccountActivity && <p> No account activity to show</p>}
+              {validAccountActivity && (
+                <ul>
+                  <p>
+                    Account Balance: {accountInfo.accountBalance} {accountInfo.accountCurrency}
+                  </p>
+                  {accountInfo?.accountActivity.map((item, index) => (
+                    <li key={index + 1}>
+                      <div className="vendor">
+                        <h5>{item.from ? 'from: ' + item.from : 'to: ' + item.to}</h5>
+                        <p>{item.type}</p>
+                      </div>
 
-                    <div className="amount">
-                      {item.amount} {item.currency}
-                    </div>
-                    {/* <div className="time">{item.timeStamp}</div>  */}
-                  </li>
-                ))}
-              </ul>
+                      <div className="amount">
+                        {item.amount} {item.currency}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                // add a div to display card info in place of account activity
+              )}
             </div>
           </div>
         </div>
