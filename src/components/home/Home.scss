@@ -1,3 +1,65 @@
 .homeWrapper {
-    border: 1px solid aqua;
+    //border: 1px solid aqua;
+    padding-left: 2.5vw;
+    padding-right: 2.5vw;
+    ul{
+        list-style: none;
+    }
+}
+
+.homesCardWrapper, .homesAccountFormWrapper,.homesSendMoneyWrapper {
+    width: 65%;
+}
+
+.homesAccountFormWrapper {
+    border: 3px solid orangered;
+    width: 65%;
+}
+
+.homesSendMoneyWrapper {
+    border: 1px solid green;
+}
+.ownerInfo {
+    border: 1px solid blue;
+    
+}
+
+.ownerAccounts {
+    border: 2px solid yellow;
+}
+
+.accountsWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.accountInfo {
+    border: 1px solid green;
+    width: 65%;
+    ul {
+        li {
+            //border: 1px solid fuchsia;
+            display: flex;
+            justify-content: space-between;
+            
+        }
+    }
+}
+.vendor {
+    display: flex;
+    flex-direction: column;
+    h5 {
+        margin-bottom: 0;
+    }
+    p{
+      margin: 0; 
+    }
+}
+
+.amount {
+    display: flex;
+    align-items: center;
+}
+
+.hide {
+    display: none;
 }

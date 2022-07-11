@@ -1,12 +1,11 @@
-//import * as React from 'react';
 import React, { useContext, useState, MouseEvent, ChangeEvent } from 'react';
-import './Login.scss';
+import { NavLink } from 'react-router-dom';
 import { SimpleContext } from '../../context/SimpleContext';
+import './Login.scss';
 
 export default function Login() {
   //states for API call
   const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
-  const [responseMessage, setResponseMessage] = useState({ message: '' });
   const [responseError, setResponseError] = useState({ error: '' });
 
   //form inputs
@@ -31,15 +30,10 @@ export default function Login() {
           setCurrentOwner(response);
         } else if (response.error) {
           setResponseError(response);
-        } else if (response.message) {
-          setResponseMessage(response);
         }
       });
   }
 
-  // useEffect(()=> {
-  //   if(setValueA && )
-  // }, [effected])
   return (
     <div>
       <form>
@@ -63,12 +57,8 @@ export default function Login() {
         </label>
         <button onClick={(e) => loginAccountOwner(e)}>Click to login</button>
       </form>
-      <div>
-        {/* This needs to be rerendered when user uses correct email/pass */}
-        {responseError.error && (
-          <h4>{responseError ? responseError.error : responseMessage.message}</h4>
-        )}
-      </div>
+      <div>{responseError && <h4>{responseError?.error}</h4>}</div>
+      <NavLink to="/"> Click to go landing Page</NavLink>
     </div>
   );
 }

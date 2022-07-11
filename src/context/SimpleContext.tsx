@@ -9,6 +9,7 @@ interface AppContextInterface {
     lastName: string;
     email: string;
     primaryAddress: {
+      state: string;
       street: string;
       zipcode: string;
       city: string;
@@ -16,6 +17,9 @@ interface AppContextInterface {
     };
     password: string;
     accounts: string[];
+    cardNumber?: string;
+    cardSecurityCode?: number;
+    cardExpiry?: string;
     createdAt: string;
     updatedAt: string;
     __v: number;
@@ -40,6 +44,7 @@ const SimpleContextProvider = (props: BoxProps) => {
       street: '',
       zipcode: '',
       city: '',
+      state: '',
       country: ''
     },
     password: '',
