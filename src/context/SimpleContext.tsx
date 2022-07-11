@@ -17,6 +17,9 @@ interface AppContextInterface {
     };
     password: string;
     accounts: string[];
+    cardNumber?: string;
+    cardSecurityCode?: number;
+    cardExpiry?: string;
     createdAt: string;
     updatedAt: string;
     __v: number;
