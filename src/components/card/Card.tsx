@@ -1,7 +1,7 @@
 import { useContext, useState, MouseEvent } from 'react';
 import { NavLink } from 'react-router-dom';
-import { SimpleContext } from '../context/SimpleContext';
-import { getCardNumber, getSecurityCode, getExpiry } from '../components/getCard';
+import { SimpleContext } from '../../context/SimpleContext';
+import { getCardNumber, getSecurityCode, getExpiry } from '../getCard';
 import './Card.scss';
 
 export default function Card() {
@@ -35,13 +35,23 @@ export default function Card() {
       });
   }
 
+  const lastFour = currentOwner?.cardNumber?.split(' ').pop();
+  console.log(lastFour);
+
   return (
     <div className="cardWrapper">
       Hi Wild Woman
-      {currentOwner?.cardExpiry && <div> Click to show card details </div>}
       {currentOwner?.cardExpiry && (
         <div>
-          <h1>Request new</h1>
+          <div className="cardBody">
+            <h2>BBHM Money</h2>
+            <h1>**** **** **** {lastFour}</h1>
+          </div>
+        </div>
+      )}
+      {!currentOwner?.cardExpiry && (
+        <div>
+          <h1>I would like to have a card</h1>
           <button onClick={() => requestCreditCard()}>Click me!</button>
         </div>
       )}

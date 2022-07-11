@@ -7,6 +7,14 @@
     }
 }
 
+.homesCardWrapper {
+    width: 65%;
+}
+
+.homesAccountFormWrapper {
+    border: 3px solid orangered;
+    width: 65%;
+}
 
 .ownerInfo {
     border: 1px solid blue;
@@ -22,9 +30,8 @@
     justify-content: space-between;
 }
 .accountInfo {
-    
     border: 1px solid green;
-    width: 55%;
+    width: 65%;
     ul {
         li {
             //border: 1px solid fuchsia;
@@ -48,4 +55,8 @@
 .amount {
     display: flex;
     align-items: center;
+}
+
+.hide {
+    display: none;
 }

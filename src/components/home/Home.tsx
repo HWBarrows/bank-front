@@ -1,7 +1,8 @@
 import { useContext, useState, MouseEvent } from 'react';
 import { NavLink } from 'react-router-dom';
 import { SimpleContext } from '../../context/SimpleContext';
-import Card from '../../card/Card';
+import Card from '../card/Card';
+import AccountForm from '../../accountForm/accountForm';
 import './Home.scss';
 
 export default function Home() {
@@ -29,7 +30,9 @@ export default function Home() {
     updatedAt: '';
     __v: 0;
   }>();
-
+  const [accountInfoDisplay, setAccountInfoDisplay] = useState('accountInfo');
+  const [homesCardWrapperDisplay, setHomesCardWrapperDisplay] = useState('hide');
+  const [homesAccountFormWrapper, setHomesAccountFormWrapper] = useState('hide');
   const validOwner = currentOwner && currentOwner.firstName.length > 1;
 
   function getAccountInfo(e: MouseEvent<HTMLLIElement>) {
@@ -38,6 +41,10 @@ export default function Home() {
     fetch(`http://localhost:3030/account/${target.id}`)
       .then((response) => response.json())
       .then((response) => setAccountInfo(response));
+
+    setAccountInfoDisplay('accountInfo');
+    setHomesCardWrapperDisplay('hide');
+    setHomesAccountFormWrapper('hide');
   }
 
   function logout() {
@@ -46,33 +53,21 @@ export default function Home() {
     }
   }
 
-  // function requestCreditCard() {
-  //   const cardNumber = getCardNumber();
-  //   const securityCode = getSecurityCode();
-  //   const expiry = getExpiry();
+  function showCardComponent() {
+    setHomesCardWrapperDisplay('homesCardWrapper');
+    setAccountInfoDisplay('hide');
+    setHomesAccountFormWrapper('hide');
+  }
 
-  //   const config = {
-  //     method: 'PATCH',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       cardNumber: cardNumber,
-  //       cardSecurityCode: securityCode,
-  //       cardExpiry: expiry
-  //     })
-  //   };
-
-  //   fetch(`http://localhost:3030/accountOwner/${currentOwner?._id}`, config)
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       if (response.error) {
-  //         alert(response.error);
-  //       } else if (setCurrentOwner) {
-  //         setCurrentOwner(response);
-  //       }
-  //     });
-  // }
+  function showAccountForm() {
+    setHomesAccountFormWrapper('homesAccountFormWrapper');
+    if (accountInfoDisplay !== 'hide') {
+      setAccountInfoDisplay('hide');
+    }
+    if (homesCardWrapperDisplay !== 'hide') {
+      setHomesCardWrapperDisplay('hide');
+    }
+  }
 
   return (
     <div className="homeWrapper">
@@ -109,17 +104,20 @@ export default function Home() {
                 ))}
                 <li>Create new account</li>
               </ul>
-              {/* add card details that will be displayed when clicked */}
-              {/* {currentOwner.cardExpiry && <div> Click to show card details </div>} */}
+
+              <h4 onClick={() => showCardComponent()}>Card</h4>
+              <h4 onClick={() => showAccountForm()}>Create a new account</h4>
             </div>
-            {currentOwner.cardExpiry && (
+            {currentOwner && (
               // <div>
               //   <h1>Request new card</h1>
               //   <button onClick={() => requestCreditCard()}>Click me!</button>
               // </div>
-              <Card />
+              <div className={`${homesCardWrapperDisplay}`}>
+                <Card />
+              </div>
             )}
-            <div className="accountInfo">
+            <div className={`${accountInfoDisplay}`}>
               {!accountInfo?._id && <p>Click on an account to see activity</p>}
               {/* {!validAccountActivity && <p> No account activity to show</p>} */}
               {accountInfo && (
@@ -147,6 +145,11 @@ export default function Home() {
                 // add a div to display card info in place of account activity
               )}
             </div>
+            {currentOwner && (
+              <div className={`${homesAccountFormWrapper}`}>
+                <AccountForm />
+              </div>
+            )}
           </div>
         </div>
       )}
