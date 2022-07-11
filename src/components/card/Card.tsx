@@ -36,11 +36,9 @@ export default function Card() {
   }
 
   const lastFour = currentOwner?.cardNumber?.split(' ').pop();
-  console.log(lastFour);
 
   return (
     <div className="cardWrapper">
-      Hi Wild Woman
       {currentOwner?.cardExpiry && (
         <div>
           <div className="cardBody">

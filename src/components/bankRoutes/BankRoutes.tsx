@@ -16,7 +16,7 @@ export default function BankRoutes() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/shopping" element={<Shopping />} />
-      <Route path="/card" element={<Card />} />
+      {/* <Route path="/card" element={<Card />} /> */}
       {/* <Route path="signup" element={<Signup />} /> */}
       {/* <Route path="/login" element={<Login />} /> */}
 

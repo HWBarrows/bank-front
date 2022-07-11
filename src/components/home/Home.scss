@@ -7,7 +7,7 @@
     }
 }
 
-.homesCardWrapper {
+.homesCardWrapper, .homesAccountFormWrapper,.homesSendMoneyWrapper {
     width: 65%;
 }
 
@@ -16,6 +16,9 @@
     width: 65%;
 }
 
+.homesSendMoneyWrapper {
+    border: 1px solid green;
+}
 .ownerInfo {
     border: 1px solid blue;
     

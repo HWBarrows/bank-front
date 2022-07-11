@@ -4,6 +4,7 @@ import { SimpleContext } from '../../context/SimpleContext';
 import Card from '../card/Card';
 import AccountForm from '../../accountForm/accountForm';
 import './Home.scss';
+import SendMoney from '../sendMoney/SendMoney';
 
 export default function Home() {
   const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
@@ -33,6 +34,7 @@ export default function Home() {
   const [accountInfoDisplay, setAccountInfoDisplay] = useState('accountInfo');
   const [homesCardWrapperDisplay, setHomesCardWrapperDisplay] = useState('hide');
   const [homesAccountFormWrapper, setHomesAccountFormWrapper] = useState('hide');
+  const [sendMoneyDisplay, setSendMoneyDisplay] = useState('hide');
   const validOwner = currentOwner && currentOwner.firstName.length > 1;
 
   function getAccountInfo(e: MouseEvent<HTMLLIElement>) {
@@ -45,6 +47,7 @@ export default function Home() {
     setAccountInfoDisplay('accountInfo');
     setHomesCardWrapperDisplay('hide');
     setHomesAccountFormWrapper('hide');
+    setSendMoneyDisplay('hide');
   }
 
   function logout() {
@@ -57,6 +60,7 @@ export default function Home() {
     setHomesCardWrapperDisplay('homesCardWrapper');
     setAccountInfoDisplay('hide');
     setHomesAccountFormWrapper('hide');
+    setSendMoneyDisplay('hide');
   }
 
   function showAccountForm() {
@@ -66,6 +70,21 @@ export default function Home() {
     }
     if (homesCardWrapperDisplay !== 'hide') {
       setHomesCardWrapperDisplay('hide');
+    }
+    if (sendMoneyDisplay !== 'hide') {
+      setSendMoneyDisplay('hide');
+    }
+  }
+  function showSendMoney() {
+    setSendMoneyDisplay('homesSendMoneyWrapper');
+    if (accountInfoDisplay !== 'hide') {
+      setAccountInfoDisplay('hide');
+    }
+    if (homesCardWrapperDisplay !== 'hide') {
+      setHomesCardWrapperDisplay('hide');
+    }
+    if (homesAccountFormWrapper !== 'hide') {
+      setHomesAccountFormWrapper('hide');
     }
   }
 
@@ -102,11 +121,11 @@ export default function Home() {
                     Account Number: {item}
                   </li>
                 ))}
-                <li>Create new account</li>
+                <li></li>
               </ul>
-
-              <h4 onClick={() => showCardComponent()}>Card</h4>
               <h4 onClick={() => showAccountForm()}>Create a new account</h4>
+              <h4 onClick={() => showCardComponent()}>Card</h4>
+              <h4 onClick={() => showSendMoney()}>Send Money</h4>
             </div>
             {currentOwner && (
               // <div>
@@ -115,6 +134,11 @@ export default function Home() {
               // </div>
               <div className={`${homesCardWrapperDisplay}`}>
                 <Card />
+              </div>
+            )}
+            {currentOwner && (
+              <div className={`${sendMoneyDisplay}`}>
+                <SendMoney />
               </div>
             )}
             <div className={`${accountInfoDisplay}`}>
