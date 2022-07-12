@@ -42,8 +42,11 @@ export default function Card() {
       {currentOwner?.cardExpiry && (
         <div>
           <div className="cardBody">
-            <h2>BBHM Money</h2>
-            <h1>**** **** **** {lastFour}</h1>
+            <h3>BBHM Money</h3>
+            <h2>{currentOwner.cardNumber}</h2>
+            <h4>
+              {currentOwner.cardExpiry} {currentOwner.cardSecurityCode}
+            </h4>
           </div>
         </div>
       )}

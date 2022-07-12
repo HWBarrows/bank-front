@@ -2,12 +2,13 @@ import { useContext, useState, MouseEvent } from 'react';
 import { NavLink } from 'react-router-dom';
 import { SimpleContext } from '../../context/SimpleContext';
 import Card from '../card/Card';
-import AccountForm from '../../accountForm/accountForm';
+import AccountForm from '../accountForm/accountForm';
 import './Home.scss';
 import SendMoney from '../sendMoney/SendMoney';
 
 export default function Home() {
   const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
+  //displays accounts and balance
   const [accountInfo, setAccountInfo] = useState<{
     _id: '';
     accountOwner: '';
@@ -32,10 +33,19 @@ export default function Home() {
     __v: 0;
   }>();
   const [accountInfoDisplay, setAccountInfoDisplay] = useState('accountInfo');
+
+  //display other components
   const [homesCardWrapperDisplay, setHomesCardWrapperDisplay] = useState('hide');
   const [homesAccountFormWrapper, setHomesAccountFormWrapper] = useState('hide');
   const [sendMoneyDisplay, setSendMoneyDisplay] = useState('hide');
   const validOwner = currentOwner && currentOwner.firstName.length > 1;
+
+  const [from, setFrom] = useState('');
+  const [action, setAction] = useState('');
+  const [amount, setAmount] = useState(0);
+
+  const defaultAccountId = accountInfo?._id || '';
+  const defaultAccountBalance = accountInfo?.accountBalance || -1;
 
   function getAccountInfo(e: MouseEvent<HTMLLIElement>) {
     const target = e.target as Element;
@@ -56,6 +66,7 @@ export default function Home() {
     }
   }
 
+  //the following lines NEED to be changed to a state object
   function showCardComponent() {
     setHomesCardWrapperDisplay('homesCardWrapper');
     setAccountInfoDisplay('hide');
@@ -128,15 +139,14 @@ export default function Home() {
               <h4 onClick={() => showSendMoney()}>Send Money</h4>
             </div>
             {currentOwner && (
-              // <div>
-              //   <h1>Request new card</h1>
-              //   <button onClick={() => requestCreditCard()}>Click me!</button>
-              // </div>
               <div className={`${homesCardWrapperDisplay}`}>
                 <Card />
               </div>
             )}
             {currentOwner && (
+              // <div className={`${sendMoneyDisplay}`}>
+              //   <SendMoney accountBalance={defaultAccountBalance} accountId={defaultAccountId} />
+              // </div>
               <div className={`${sendMoneyDisplay}`}>
                 <SendMoney />
               </div>
