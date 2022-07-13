@@ -1,0 +1,14 @@
+.sendWrapper {
+    display: flex;
+    gap: 2em;
+}
+
+.sendMoneyForm {
+    display: flex;
+    flex-direction: column;
+    
+    input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

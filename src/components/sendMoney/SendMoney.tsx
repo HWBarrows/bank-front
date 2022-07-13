@@ -1,48 +1,52 @@
-import React, { useContext, useState, useReducer, ChangeEvent } from 'react';
+import React, { useContext, useState, useReducer, ChangeEvent, MouseEvent } from 'react';
 import { SimpleContext } from '../../context/SimpleContext';
+import './SendMoney.scss';
 
 export default function SendMoney() {
   const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
-  const [sendAccount, setSendAccount] = useState('');
+  const [receiver, setReceiver] = useState('');
+  const [amount, setAmount] = useState('');
+  const [warning, setWarning] = useState(false);
 
-  // function getRecieverInfo(){
-  //   Make a fetch request to the account of the reciever to then send the patch request
-  // }
-
-  function formReducer(
-    state: {
-      receiverId: string;
-      amount: string;
-      currency: string;
-    },
-    action: { type: unknown; field: string; payload: string }
-  ) {
-    switch (action.type) {
-      case 'inputSubmit':
-        return {
-          ...state,
-          [action.field]: action.payload
-        };
-      default:
-        return state;
-    }
+  function filterAmount() {
+    const amountArray = amount.split('');
+    console.log('I am amountArray' + amountArray);
+    const numberVerify = amountArray.map((item: string) => parseInt(item));
+    console.log(numberVerify);
+    return numberVerify.every((item: unknown) => Number.isNaN(item));
+  }
+  console.log(filterAmount());
+  if (!filterAmount()) {
+    setWarning(true);
   }
 
-  const initialState = {
-    receiverId: '',
-    amount: '',
-    currency: ''
-  };
-
-  const [formState, dispatch] = useReducer(formReducer, initialState);
-
-  function getInputData(e: ChangeEvent<HTMLInputElement>) {
-    dispatch({
-      type: 'inputSubmit',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  }
+  const [sendAccount, setSendAccount] = useState<{
+    accountActivity: [string];
+    accountBalance: number;
+    accountCurrency: string;
+    accountOwner: string;
+    accountType: string;
+    cardExpiry: string;
+    cardNumber: string;
+    cardSecurityCode: number;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    _id: string;
+  }>({
+    accountActivity: [''],
+    accountBalance: 0,
+    accountCurrency: '',
+    accountOwner: '',
+    accountType: '',
+    cardExpiry: '',
+    cardNumber: '',
+    cardSecurityCode: 0,
+    createdAt: '',
+    updatedAt: '',
+    __v: 0,
+    _id: ''
+  });
 
   const config = {
     method: 'POST',
@@ -56,37 +60,62 @@ export default function SendMoney() {
     })
   };
 
-  function accountInfoSendMoney() {
-    // const target = e.target as Element;
+  function accountInfoSendMoney(e: MouseEvent<HTMLLIElement>) {
+    const target = e.target as Element;
 
-    fetch(`http://localhost:3030/account/${formState.receiverId}`)
+    fetch(`http://localhost:3030/account/${target.id}`)
       .then((response) => response.json())
       .then((response) => setSendAccount(response));
   }
-  console.log(formState);
+
   return (
     <div>
-      <label>
-        Please enter the account number for the person receiving the funds
-        <input
-          type="text"
-          name="receiverId"
-          placeholder="where is it going?"
-          value={formState.receiverId}
-          onChange={(e) => getInputData(e)}
-        />
-      </label>
-      <label>
-        Please enter the amount to send
-        <input
-          type="text"
-          name="amount"
-          placeholder="how much"
-          value={formState.amount}
-          onChange={(e) => getInputData(e)}
-        />
-      </label>
-      <input type="text" placeholder="which currency?" />
+      {currentOwner && (
+        <div className="sendWrapper">
+          <div className="sendMoneyFromWrapper">
+            <h1>From</h1>
+            <h3>which account?</h3>
+            {currentOwner.accounts.map((item, index) => (
+              <li key={index} id={item} onClick={(e) => accountInfoSendMoney(e)}>
+                Account Number: {item}
+              </li>
+            ))}
+          </div>
+          <div className="sendMoneyToWrapper">
+            <p>
+              {sendAccount.accountBalance} {sendAccount.accountCurrency}
+            </p>
+
+            <form className="sendMoneyForm">
+              <label>
+                Please enter the account number for the person receiving the funds
+                <input
+                  type="text"
+                  placeholder="where is it going?"
+                  value={receiver}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setReceiver(e.target.value)}
+                />
+              </label>
+              <label>
+                Please enter the amount to send
+                <input
+                  type="text"
+                  name="amount"
+                  placeholder="amount to send"
+                  value={amount}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}
+                />
+              </label>
+              <input type="text" placeholder="which currency?" />
+            </form>
+          </div>
+          {warning && (
+            <div className="warning">
+              <p>Only enter numbers</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
