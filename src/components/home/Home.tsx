@@ -40,12 +40,12 @@ export default function Home() {
   const [sendMoneyDisplay, setSendMoneyDisplay] = useState('hide');
   const validOwner = currentOwner && currentOwner.firstName.length > 1;
 
-  const [from, setFrom] = useState('');
-  const [action, setAction] = useState('');
-  const [amount, setAmount] = useState(0);
+  // const [from, setFrom] = useState('');
+  // const [action, setAction] = useState('');
+  // const [amount, setAmount] = useState(0);
 
-  const defaultAccountId = accountInfo?._id || '';
-  const defaultAccountBalance = accountInfo?.accountBalance || -1;
+  // const defaultAccountId = accountInfo?._id || '';
+  // const defaultAccountBalance = accountInfo?.accountBalance || -1;
 
   function getAccountInfo(e: MouseEvent<HTMLLIElement>) {
     const target = e.target as Element;
