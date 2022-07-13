@@ -1,14 +1,26 @@
 .sendWrapper {
     display: flex;
-    gap: 2em;
+    gap: 3em;
 }
 
 .sendMoneyForm {
     display: flex;
     flex-direction: column;
-    
+
     input {
         width: 100%;
         box-sizing: border-box;
     }
+}
+
+.sendMoneyFromWrapper{
+   
+   li{
+    list-style: none;
+   }
+}
+
+.sendMoneyToWrapper {
+    width: 80%;
+    margin-left: 2.5%;
 }
