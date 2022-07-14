@@ -43,7 +43,14 @@ export default function SendMoney() {
   });
 
   const [sendAccount, setSendAccount] = useState<{
-    accountActivity: [string];
+    accountActivity: {
+      timeStamp: string;
+      from?: string;
+      to?: string;
+      type: string;
+      amount: number;
+      currency: string;
+    }[];
     accountBalance: number;
     accountCurrency: string;
     accountOwner: string;
@@ -53,7 +60,7 @@ export default function SendMoney() {
     __v: number;
     _id: string;
   }>({
-    accountActivity: [''],
+    accountActivity: [],
     accountBalance: 0,
     accountCurrency: '',
     accountOwner: '',
@@ -65,12 +72,12 @@ export default function SendMoney() {
   });
 
   function sendRecipientMoney() {
-    if (receiver.length < 1) {
-      alert("Please enter recipient's account number");
+    if (receiver.length < 1 || amount.length < 1 || currency.length < 1) {
+      alert('All fields must be complete');
+      return;
     } else if (!filterAmountInput()) {
       alert('Only use numbers for amount');
-    } else if (currency.length < 1 || amount.length < 1) {
-      alert('All fields must be complete');
+      return;
     }
     //this function will first get recipients account balance
     function recipientGetInfo() {
@@ -81,34 +88,17 @@ export default function SendMoney() {
             alert(response.error);
           } else {
             setGetRecipientInfo(response);
-            console.log(getRecipientInfo);
           }
         });
-      // if (receiver.length < 1) {
-      //   alert("Please enter recipient's account number");
-      // } else if (!filterAmountInput()) {
-      //   alert('Only use numbers for amount');
-      // } else if (currency.length < 1 || amount.length < 1) {
-      //   alert('All fields must be complete');
-      // } else {
-      //   fetch(`http://localhost:3030/account/${receiver}`)
-      //     .then((response) => response.json())
-      //     .then((response) => {
-      //       if (response.error) {
-      //         alert(response.error);
-      //       } else {
-      //         setGetRecipientInfo(response);
-      //         console.log(getRecipientInfo);
-      //       }
-      //     });
-      // }
     }
+
+    let verifiedNumbers = 0;
     //this function increases the balance
     function newRecipientBalance() {
       const amountArray = amount.split('');
       const numberVerify = amountArray.map((item: string) => parseInt(item));
       if (numberVerify.every((item: unknown) => !Number.isNaN(item))) {
-        const verifiedNumbers = Number(numberVerify.join(''));
+        verifiedNumbers = Number(numberVerify.join(''));
         const sum = verifiedNumbers + getRecipientInfo.accountBalance;
         return sum;
       } else {
@@ -119,23 +109,34 @@ export default function SendMoney() {
     recipientGetInfo();
     newRecipientBalance();
 
+    if (verifiedNumbers && sendAccount.accountBalance < verifiedNumbers) {
+      alert('sorry, insufficient funds. Please choose another account or amount to send');
+      return;
+    }
+
+    if (!newRecipientBalance) {
+      alert('Only use numbers for the amount');
+      return;
+    }
+
+    getRecipientInfo.accountActivity.push({
+      timeStamp: new Date().toLocaleString(),
+      from: `${currentOwner?.firstName} ${currentOwner?.lastName}`,
+      type: 'deposit',
+      amount: Number(amount),
+      currency: currency
+    });
     const config = {
       method: 'PUT',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({
         identifier: receiver,
         accountBalance: newRecipientBalance(),
-        accountActivity: getRecipientInfo.accountActivity.push({
-          timeStamp: new Date().toLocaleDateString(),
-          from: `${currentOwner?.firstName} + ${currentOwner?.firstName}`,
-          type: 'deposit',
-          amount: Number(amount),
-          currency: currency
-        })
+        accountActivity: getRecipientInfo.accountActivity
       })
     };
 
-    fetch(`http://localhost:3030/account/${receiver}`, config)
+    fetch(`http://localhost:3030/account`, config)
       .then((response) => response.json())
       .then((response) => {
         if (response.error) {
@@ -144,7 +145,39 @@ export default function SendMoney() {
           alert('success');
         }
       });
+
+    setReceiver('');
+    setAmount('');
+    setCurrency('');
+
+    const newBalanceForSender = sendAccount.accountBalance - verifiedNumbers;
+
+    sendAccount.accountActivity.push({
+      timeStamp: new Date().toLocaleString(),
+      to: receiver,
+      type: 'payment',
+      amount: Number(amount),
+      currency: currency
+    });
+    const config2 = {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({
+        identifier: sendAccount._id,
+        accountBalance: newBalanceForSender,
+        accountActivity: sendAccount.accountActivity
+      })
+    };
+
+    fetch(`http://localhost:3030/account`, config2)
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.error) {
+          alert(response.error);
+        }
+      });
   }
+
   //setGetRecipientInfo(getRecipientInfo.accountBalance:newRecipientBalance)
   //this is the list item onclick
   function accountInfoSendMoney(e: MouseEvent<HTMLLIElement>) {
