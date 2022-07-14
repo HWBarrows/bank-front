@@ -4,7 +4,7 @@ import './SendMoney.scss';
 
 export default function SendMoney() {
   const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
-  const [receiver, setReceiver] = useState('');
+  const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('');
   const [warning, setWarning] = useState(false);
@@ -72,7 +72,7 @@ export default function SendMoney() {
   });
 
   function sendRecipientMoney() {
-    if (receiver.length < 1 || amount.length < 1 || currency.length < 1) {
+    if (recipient.length < 1 || amount.length < 1 || currency.length < 1) {
       alert('All fields must be complete');
       return;
     } else if (!filterAmountInput()) {
@@ -81,7 +81,7 @@ export default function SendMoney() {
     }
     //this function will first get recipients account balance
     function recipientGetInfo() {
-      fetch(`http://localhost:3030/account/${receiver}`)
+      fetch(`http://localhost:3030/account/${recipient}`)
         .then((response) => response.json())
         .then((response) => {
           if (response.error) {
@@ -91,7 +91,7 @@ export default function SendMoney() {
           }
         });
     }
-
+    console.log(getRecipientInfo);
     let verifiedNumbers = 0;
     //this function increases the balance
     function newRecipientBalance() {
@@ -126,60 +126,68 @@ export default function SendMoney() {
       amount: Number(amount),
       currency: currency
     });
-    const config = {
-      method: 'PUT',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({
-        identifier: receiver,
-        accountBalance: newRecipientBalance(),
-        accountActivity: getRecipientInfo.accountActivity
-      })
-    };
+    console.log('receiverActivity', getRecipientInfo.accountActivity);
+    function firstPut() {
+      const config = {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({
+          recipient: `${recipient}`,
+          accountBalance: newRecipientBalance(),
+          accountActivity: getRecipientInfo.accountActivity
+        })
+      };
 
-    fetch(`http://localhost:3030/account`, config)
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.error) {
-          alert(response.error);
-        } else {
-          alert('success');
-        }
-      });
-
-    setReceiver('');
-    setAmount('');
-    setCurrency('');
-
+      fetch(`http://localhost:3030/account`, config)
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.error) {
+            console.log(response.error);
+          } else {
+            console.log(response);
+          }
+        });
+    }
+    firstPut();
     const newBalanceForSender = sendAccount.accountBalance - verifiedNumbers;
 
-    sendAccount.accountActivity.push({
-      timeStamp: new Date().toLocaleString(),
-      to: receiver,
-      type: 'payment',
-      amount: Number(amount),
-      currency: currency
-    });
-    const config2 = {
-      method: 'PUT',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({
-        identifier: sendAccount._id,
-        accountBalance: newBalanceForSender,
-        accountActivity: sendAccount.accountActivity
-      })
-    };
-
-    fetch(`http://localhost:3030/account`, config2)
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.error) {
-          alert(response.error);
-        }
+    function secondPut() {
+      sendAccount.accountActivity.push({
+        timeStamp: new Date().toLocaleString(),
+        to: recipient,
+        type: 'payment',
+        amount: Number(amount),
+        currency: currency
       });
+
+      console.log(sendAccount.accountActivity);
+      const config2 = {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({
+          recipient: sendAccount._id,
+          accountBalance: newBalanceForSender,
+          accountActivity: sendAccount.accountActivity
+        })
+      };
+      fetch(`http://localhost:3030/account`, config2)
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.error) {
+            console.log(response.error);
+          } else {
+            console.log(response);
+          }
+        });
+    }
+    secondPut();
+    setRecipient('');
+    setAmount('');
+    setCurrency('');
   }
 
-  //setGetRecipientInfo(getRecipientInfo.accountBalance:newRecipientBalance)
-  //this is the list item onclick
+  // setGetRecipientInfo(getRecipientInfo.accountBalance:newRecipientBalance)
+  // this is the list item onclick
   function accountInfoSendMoney(e: MouseEvent<HTMLLIElement>) {
     const target = e.target as Element;
 
@@ -214,8 +222,8 @@ export default function SendMoney() {
                 <input
                   type="text"
                   placeholder="where is it going?"
-                  value={receiver}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setReceiver(e.target.value)}
+                  value={recipient}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setRecipient(e.target.value)}
                 />
               </label>
               <label>
