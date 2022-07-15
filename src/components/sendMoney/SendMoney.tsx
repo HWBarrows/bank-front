@@ -7,7 +7,7 @@ export default function SendMoney() {
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('');
-  const [warning, setWarning] = useState(false);
+  const [confirmInfo, setConfirmInfo] = useState(false);
 
   function filterAmountInput() {
     const amountArray = amount.split('');
@@ -22,7 +22,7 @@ export default function SendMoney() {
       amount: number;
       currency: string;
     }[];
-    accountBalance: number;
+    accountBalance?: number;
     accountCurrency: string;
     accountOwner: string;
     accountType: string;
@@ -71,123 +71,6 @@ export default function SendMoney() {
     _id: ''
   });
 
-  function sendRecipientMoney() {
-    if (recipient.length < 1 || amount.length < 1 || currency.length < 1) {
-      alert('All fields must be complete');
-      return;
-    } else if (!filterAmountInput()) {
-      alert('Only use numbers for amount');
-      return;
-    }
-    //this function will first get recipients account balance
-    function recipientGetInfo() {
-      fetch(`http://localhost:3030/account/${recipient}`)
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.error) {
-            alert(response.error);
-          } else {
-            setGetRecipientInfo(response);
-          }
-        });
-    }
-    console.log(getRecipientInfo);
-    let verifiedNumbers = 0;
-    //this function increases the balance
-    function newRecipientBalance() {
-      const amountArray = amount.split('');
-      const numberVerify = amountArray.map((item: string) => parseInt(item));
-      if (numberVerify.every((item: unknown) => !Number.isNaN(item))) {
-        verifiedNumbers = Number(numberVerify.join(''));
-        const sum = verifiedNumbers + getRecipientInfo.accountBalance;
-        return sum;
-      } else {
-        return false;
-      }
-    }
-
-    recipientGetInfo();
-    newRecipientBalance();
-
-    if (verifiedNumbers && sendAccount.accountBalance < verifiedNumbers) {
-      alert('sorry, insufficient funds. Please choose another account or amount to send');
-      return;
-    }
-
-    if (!newRecipientBalance) {
-      alert('Only use numbers for the amount');
-      return;
-    }
-
-    getRecipientInfo.accountActivity.push({
-      timeStamp: new Date().toLocaleString(),
-      from: `${currentOwner?.firstName} ${currentOwner?.lastName}`,
-      type: 'deposit',
-      amount: Number(amount),
-      currency: currency
-    });
-    console.log('receiverActivity', getRecipientInfo.accountActivity);
-    function firstPut() {
-      const config = {
-        method: 'PUT',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({
-          recipient: `${recipient}`,
-          accountBalance: newRecipientBalance(),
-          accountActivity: getRecipientInfo.accountActivity
-        })
-      };
-
-      fetch(`http://localhost:3030/account`, config)
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.error) {
-            console.log(response.error);
-          } else {
-            console.log(response);
-          }
-        });
-    }
-    firstPut();
-    const newBalanceForSender = sendAccount.accountBalance - verifiedNumbers;
-
-    function secondPut() {
-      sendAccount.accountActivity.push({
-        timeStamp: new Date().toLocaleString(),
-        to: recipient,
-        type: 'payment',
-        amount: Number(amount),
-        currency: currency
-      });
-
-      console.log(sendAccount.accountActivity);
-      const config2 = {
-        method: 'PUT',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({
-          recipient: sendAccount._id,
-          accountBalance: newBalanceForSender,
-          accountActivity: sendAccount.accountActivity
-        })
-      };
-      fetch(`http://localhost:3030/account`, config2)
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.error) {
-            console.log(response.error);
-          } else {
-            console.log(response);
-          }
-        });
-    }
-    secondPut();
-    setRecipient('');
-    setAmount('');
-    setCurrency('');
-  }
-
-  // setGetRecipientInfo(getRecipientInfo.accountBalance:newRecipientBalance)
-  // this is the list item onclick
   function accountInfoSendMoney(e: MouseEvent<HTMLLIElement>) {
     const target = e.target as Element;
 
@@ -196,8 +79,136 @@ export default function SendMoney() {
       .then((response) => setSendAccount(response));
   }
 
+  function recipientGetInfo() {
+    if (recipient.length < 1 || amount.length < 1 || currency.length < 1) {
+      alert('All fields must be complete');
+      return;
+    } else if (!filterAmountInput()) {
+      alert('Only use numbers for amount');
+      return;
+    }
+    fetch(`http://localhost:3030/account/${recipient}`)
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.error) {
+          alert(response.error);
+        } else {
+          setGetRecipientInfo(response);
+          setConfirmInfo(true);
+        }
+      });
+  }
+
+  // let sanitizedAmount = 0;
+
+  function sanitizeAmount() {
+    const amountArray = amount.split('');
+    const numberVerify = amountArray.map((item: string) => parseInt(item));
+    if (numberVerify.filter((item: unknown) => Number.isNaN(item)).length > 0) {
+      return NaN;
+    } else {
+      return Number(numberVerify.join(''));
+    }
+  }
+
+  // function sanitizeAmount() {
+  //   const amountArray = amount.split('');
+  //   const numberVerify = amountArray.map((item: string) => parseInt(item));
+  //   if (numberVerify.every((item: unknown) => !Number.isNaN(item))) {
+  //     return Number(numberVerify.join(''));
+  //   } else {
+  //     return numberVerify[item];
+  //   }
+  // }
+  // //beginning of new function
+
+  // //   const sum = sanitizedAmount + getRecipientInfo.accountBalance;
+  // //   return sum;
+  // // } else {
+  // //   return false;
+  // function newRecipientBalance() {
+  //   return 'hi guys';
+  // }
+
+  // newRecipientBalance();
+  // if (sanitizedAmount && sendAccount.accountBalance < sanitizedAmount) {
+  //   alert('sorry, insufficient funds. Please choose another account or amount to send');
+  //   return;
+  // }
+
+  // getRecipientInfo.accountActivity.push({
+  //   timeStamp: new Date().toLocaleString(),
+  //   from: `${currentOwner?.firstName} ${currentOwner?.lastName}`,
+  //   type: 'deposit',
+  //   amount: Number(amount),
+  //   currency: currency
+  // });
+
+  // function firstPut() {
+  //   const config = {
+  //     method: 'PUT',
+  //     headers: { 'Content-type': 'application/json' },
+  //     body: JSON.stringify({
+  //       recipient: `${recipient}`,
+  //       accountBalance: newRecipientBalance(),
+  //       accountActivity: getRecipientInfo.accountActivity
+  //     })
+  //   };
+
+  //   fetch(`http://localhost:3030/account`, config)
+  //     .then((response) => response.json())
+  //     .then((response) => {
+  //       if (response.error) {
+  //         console.log(response.error);
+  //       } else {
+  //         console.log(response);
+  //       }
+  //     });
+  // }
+  // firstPut();
+
+  // const newBalanceForSender = sendAccount.accountBalance - sanitizedAmount;
+  // console.log('verified numbers', sanitizedAmount);
+  // console.log('sender balance', newBalanceForSender);
+  // console.log('new recipient balance', newRecipientBalance());
+
+  // function secondPut() {
+  //   sendAccount.accountActivity.push({
+  //     timeStamp: new Date().toLocaleString(),
+  //     to: recipient,
+  //     type: 'payment',
+  //     amount: Number(amount),
+  //     currency: currency
+  //   });
+
+  //   console.log(sendAccount.accountActivity);
+  //   const config2 = {
+  //     method: 'PUT',
+  //     headers: { 'Content-type': 'application/json' },
+  //     body: JSON.stringify({
+  //       recipient: sendAccount._id,
+  //       accountBalance: newBalanceForSender,
+  //       accountActivity: sendAccount.accountActivity
+  //     })
+  //   };
+  //   fetch(`http://localhost:3030/account`, config2)
+  //     .then((response) => response.json())
+  //     .then((response) => {
+  //       if (response.error) {
+  //         console.log(response.error);
+  //       } else {
+  //         console.log(response);
+  //       }
+  //     });
+  // }
+  // secondPut();
+  // setRecipient('');
+  // setAmount('');
+  // setCurrency('');
+
   return (
     <div>
+      hi guys
       {currentOwner && (
         <div className="sendWrapper">
           <div className="sendMoneyFromWrapper">
@@ -248,15 +259,28 @@ export default function SendMoney() {
                 />
               </label>
             </form>
-            <button onClick={() => sendRecipientMoney()}>Test stuff</button>
+            <button onClick={() => recipientGetInfo()}>Test stuff</button>
           </div>
           {!filterAmountInput() && (
             <div className="warning">
               <p>Enter numbers only</p>
             </div>
           )}
+          {confirmInfo && (
+            <div>
+              <p>Please confirm the information is correct</p>
+              <p>
+                Sending {amount} {currency}
+              </p>
+              <p>To account # {getRecipientInfo._id}</p>
+              <button onClick={() => setConfirmInfo(false)}> Edit </button>
+              <p>If all information is correct, please click send to complete the transaction</p>
+              <button onClick={() => console.log(sanitizeAmount())}>Send</button>
+            </div>
+          )}
         </div>
       )}
+      {!currentOwner && <div>Access Denied</div>}
     </div>
   );
 }
