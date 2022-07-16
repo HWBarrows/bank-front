@@ -1,0 +1,43 @@
+.landingWrapper {
+    border-top: 5vh solid #8ecbbd;
+    border-bottom: 5vh solid #8ecbbd;
+    background-color: black;
+    width: 100%;
+    display: flex;
+    color: rgb(214, 214, 214);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    p {
+        display: inline-block;
+        //margin-block-end: 0;
+        margin-block-start: 0;
+    }
+
+}
+
+.title {
+    font-family: 'League Gothic', sans-serif;
+    font-size: 5rem;
+    letter-spacing: 3px;
+    color: rgb(214, 214, 214);
+    //margin-bottom: 1em;
+}
+
+.subtitle {
+    font-family: 'Karla', sans-serif;
+    font-size: 1.5em;
+    letter-spacing: 5px;
+}
+
+.links {
+    margin-top: 5em;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Karla', sans-serif;
+    // color: rgb(214, 214, 214);
+     a {
+        color: rgb(214, 214, 214);
+     }
+    
+}

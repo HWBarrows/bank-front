@@ -1,4 +1,9 @@
-.App {
-  text-align: center;
+.appWrapper {
+  width: 80vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  max-width: 1600px;
+  background-color: whitesmoke;
 }
 

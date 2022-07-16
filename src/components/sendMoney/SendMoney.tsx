@@ -22,7 +22,7 @@ export default function SendMoney() {
       amount: number;
       currency: string;
     }[];
-    accountBalance?: number;
+    accountBalance: number;
     accountCurrency: string;
     accountOwner: string;
     accountType: string;
@@ -99,9 +99,11 @@ export default function SendMoney() {
       });
   }
 
-  // let sanitizedAmount = 0;
-
   function sanitizeAmount() {
+    if (!filterAmountInput()) {
+      alert('Only use numbers for amount');
+      return NaN;
+    }
     const amountArray = amount.split('');
     const numberVerify = amountArray.map((item: string) => parseInt(item));
     if (numberVerify.filter((item: unknown) => Number.isNaN(item)).length > 0) {
@@ -111,75 +113,101 @@ export default function SendMoney() {
     }
   }
 
-  // function sanitizeAmount() {
-  //   const amountArray = amount.split('');
-  //   const numberVerify = amountArray.map((item: string) => parseInt(item));
-  //   if (numberVerify.every((item: unknown) => !Number.isNaN(item))) {
-  //     return Number(numberVerify.join(''));
-  //   } else {
-  //     return numberVerify[item];
-  //   }
-  // }
-  // //beginning of new function
+  function newRecipientBalance() {
+    return sanitizeAmount() + getRecipientInfo.accountBalance;
+  }
 
-  // //   const sum = sanitizedAmount + getRecipientInfo.accountBalance;
-  // //   return sum;
-  // // } else {
-  // //   return false;
-  // function newRecipientBalance() {
-  //   return 'hi guys';
-  // }
+  function newSenderBalance() {
+    return sendAccount.accountBalance - sanitizeAmount();
+  }
 
-  // newRecipientBalance();
-  // if (sanitizedAmount && sendAccount.accountBalance < sanitizedAmount) {
-  //   alert('sorry, insufficient funds. Please choose another account or amount to send');
-  //   return;
-  // }
+  function makeRecipientConfig() {
+    if (Number.isNaN(sanitizeAmount())) {
+      alert('Only use numbers for amount');
+      return null;
+    } else if (sanitizeAmount() > sendAccount.accountBalance) {
+      alert(
+        'Insufficient funds, please choose a different amount to send or use a different account'
+      );
+      return null;
+    } else {
+      getRecipientInfo.accountActivity.push({
+        timeStamp: new Date().toLocaleString(),
+        from: `${currentOwner?.firstName} ${currentOwner?.lastName}`,
+        type: 'deposit',
+        amount: sanitizeAmount(),
+        currency: currency
+      });
 
-  // getRecipientInfo.accountActivity.push({
-  //   timeStamp: new Date().toLocaleString(),
-  //   from: `${currentOwner?.firstName} ${currentOwner?.lastName}`,
-  //   type: 'deposit',
-  //   amount: Number(amount),
-  //   currency: currency
-  // });
+      const config = {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({
+          recipient: getRecipientInfo._id,
+          accountBalance: newRecipientBalance(),
+          accountActivity: getRecipientInfo.accountActivity
+        })
+      };
+      return config;
+    }
+  }
 
-  // function firstPut() {
-  //   const config = {
-  //     method: 'PUT',
-  //     headers: { 'Content-type': 'application/json' },
-  //     body: JSON.stringify({
-  //       recipient: `${recipient}`,
-  //       accountBalance: newRecipientBalance(),
-  //       accountActivity: getRecipientInfo.accountActivity
-  //     })
-  //   };
+  function makeSenderConfig() {
+    if (!Number.isNaN(sanitizeAmount())) {
+      sendAccount.accountActivity.push({
+        timeStamp: new Date().toLocaleString(),
+        to: recipient,
+        type: 'payment',
+        amount: sanitizeAmount(),
+        currency: currency
+      });
 
-  //   fetch(`http://localhost:3030/account`, config)
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       if (response.error) {
-  //         console.log(response.error);
-  //       } else {
-  //         console.log(response);
-  //       }
-  //     });
-  // }
-  // firstPut();
+      const config = {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({
+          recipient: sendAccount._id,
+          accountBalance: newSenderBalance(),
+          accountActivity: sendAccount.accountActivity
+        })
+      };
+      return config;
+    }
+    return null;
+  }
 
-  // const newBalanceForSender = sendAccount.accountBalance - sanitizedAmount;
-  // console.log('verified numbers', sanitizedAmount);
-  // console.log('sender balance', newBalanceForSender);
-  // console.log('new recipient balance', newRecipientBalance());
+  function sendRecipientFunds() {
+    if (makeRecipientConfig() || makeSenderConfig()) {
+      const recipientConfig = makeRecipientConfig() || undefined;
+      fetch(`http://localhost:3030/account`, recipientConfig)
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.error) {
+            console.log(response.error);
+          } else {
+            console.log(response);
+          }
+        });
+
+      const senderConfig = makeSenderConfig() || undefined;
+      fetch(`http://localhost:3030/account`, senderConfig)
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.error) {
+            console.log(response.error);
+          } else {
+            console.log(response);
+          }
+        });
+
+      setRecipient('');
+      setAmount('');
+      setCurrency('');
+    }
+  }
 
   // function secondPut() {
-  //   sendAccount.accountActivity.push({
-  //     timeStamp: new Date().toLocaleString(),
-  //     to: recipient,
-  //     type: 'payment',
-  //     amount: Number(amount),
-  //     currency: currency
-  //   });
+  //
 
   //   console.log(sendAccount.accountActivity);
   //   const config2 = {
@@ -202,13 +230,10 @@ export default function SendMoney() {
   //     });
   // }
   // secondPut();
-  // setRecipient('');
-  // setAmount('');
-  // setCurrency('');
+  //
 
   return (
     <div>
-      hi guys
       {currentOwner && (
         <div className="sendWrapper">
           <div className="sendMoneyFromWrapper">
@@ -273,9 +298,9 @@ export default function SendMoney() {
                 Sending {amount} {currency}
               </p>
               <p>To account # {getRecipientInfo._id}</p>
-              <button onClick={() => setConfirmInfo(false)}> Edit </button>
+              {/* <button onClick={() => setConfirmInfo(false)}> Edit </button> */}
               <p>If all information is correct, please click send to complete the transaction</p>
-              <button onClick={() => console.log(sanitizeAmount())}>Send</button>
+              <button onClick={() => sendRecipientFunds()}>Send</button>
             </div>
           )}
         </div>

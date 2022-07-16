@@ -4,7 +4,7 @@ import BankRoutes from '../src/components/bankRoutes/BankRoutes';
 
 export default function App() {
   return (
-    <div>
+    <div className="appWrapper">
       <SimpleContextProvider>
         <BankRoutes />
       </SimpleContextProvider>
