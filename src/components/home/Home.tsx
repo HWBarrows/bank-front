@@ -111,11 +111,11 @@ export default function Home() {
           <div className="ownerFloater"></div>
           <div className="accountsWrapper">
             <div className="ownerAccounts">
-              Accounts
+              <h4>Accounts</h4>
               <ul>
                 {currentOwner.accounts.map((item, index) => (
                   <li key={index} id={item} onClick={(e) => getAccountInfo(e)}>
-                    <h4> Account Number: {item} </h4>
+                    Account Number: {item}
                   </li>
                 ))}
                 <li></li>
