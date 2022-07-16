@@ -108,28 +108,14 @@ export default function Home() {
       )}
       {validOwner && (
         <div className="ownerWrapper">
-          <div className="ownerInfo">
-            <h3>
-              Hello {currentOwner.firstName} {currentOwner.lastName}
-            </h3>
-            <ul>
-              <li>{currentOwner.primaryAddress.street}</li>
-              <li>
-                {currentOwner.primaryAddress.city}, {currentOwner.primaryAddress.state}{' '}
-                {currentOwner.primaryAddress.zipcode}
-              </li>
-            </ul>
-
-            <button onClick={() => logout()}>Click to logout</button>
-          </div>
+          <div className="ownerFloater"></div>
           <div className="accountsWrapper">
             <div className="ownerAccounts">
-              <h4>Accounts</h4>
-
+              Accounts
               <ul>
                 {currentOwner.accounts.map((item, index) => (
                   <li key={index} id={item} onClick={(e) => getAccountInfo(e)}>
-                    Account Number: {item}
+                    <h4> Account Number: {item} </h4>
                   </li>
                 ))}
                 <li></li>
@@ -138,52 +124,68 @@ export default function Home() {
               <h4 onClick={() => showCardComponent()}>Card</h4>
               <h4 onClick={() => showSendMoney()}>Send Money</h4>
             </div>
-            {currentOwner && (
-              <div className={`${homesCardWrapperDisplay}`}>
-                <Card />
-              </div>
-            )}
-            {currentOwner && (
-              // <div className={`${sendMoneyDisplay}`}>
-              //   <SendMoney accountBalance={defaultAccountBalance} accountId={defaultAccountId} />
-              // </div>
-              <div className={`${sendMoneyDisplay}`}>
-                <SendMoney />
-              </div>
-            )}
-            <div className={`${accountInfoDisplay}`}>
-              {!accountInfo?._id && <p>Click on an account to see activity</p>}
-              {/* {!validAccountActivity && <p> No account activity to show</p>} */}
-              {accountInfo && (
+            <div className="mainHomeContent">
+              <div className="ownerInfo">
+                <h3>
+                  Hello {currentOwner.firstName} {currentOwner.lastName}
+                </h3>
                 <ul>
-                  <p>
-                    Account Balance: {accountInfo.accountBalance} {accountInfo.accountCurrency}
-                  </p>
-                  {accountInfo.accountActivity.length > 1 ? (
-                    accountInfo?.accountActivity.map((item, index) => (
-                      <li key={index + 1}>
-                        <div className="vendor">
-                          <h5>{item.from ? 'from: ' + item.from : 'to: ' + item.to}</h5>
-                          <p>{item.type}</p>
-                        </div>
-
-                        <div className="amount">
-                          {item.amount} {item.currency}
-                        </div>
-                      </li>
-                    ))
-                  ) : (
-                    <p> No account activity to show</p>
-                  )}
+                  <li>{currentOwner.primaryAddress.street}</li>
+                  <li>
+                    {currentOwner.primaryAddress.city}, {currentOwner.primaryAddress.state}{' '}
+                    {currentOwner.primaryAddress.zipcode}
+                  </li>
                 </ul>
-                // add a div to display card info in place of account activity
+
+                <button onClick={() => logout()}>Click to logout</button>
+              </div>
+              <div className={`${accountInfoDisplay}`}>
+                {!accountInfo?._id && <p>Click on an account to see activity</p>}
+                {accountInfo && (
+                  <ul>
+                    <p>
+                      Account Balance: {accountInfo.accountBalance} {accountInfo.accountCurrency}
+                    </p>
+                    {accountInfo.accountActivity.length > 1 ? (
+                      accountInfo?.accountActivity
+                        .map((item, index) => (
+                          <li key={index + 1}>
+                            <div className="vendor">
+                              <h5>{item.from ? 'from: ' + item.from : 'to: ' + item.to}</h5>
+                              <p>{item.type}</p>
+                              <p>{item.timeStamp}</p>
+                            </div>
+
+                            <div className="amount">
+                              {item.from ? '+' : '-'} {item.amount} {item.currency}
+                            </div>
+                          </li>
+                        ))
+                        .reverse()
+                    ) : (
+                      <p> No account activity to show</p>
+                    )}
+                  </ul>
+                  // add a div to display card info in place of account activity
+                )}
+              </div>
+              {currentOwner && (
+                <div className={`${homesCardWrapperDisplay}`}>
+                  <Card />
+                </div>
+              )}
+              {currentOwner && (
+                <div className={`${sendMoneyDisplay}`}>
+                  <SendMoney />
+                </div>
+              )}
+
+              {currentOwner && (
+                <div className={`${homesAccountFormWrapper}`}>
+                  <AccountForm />
+                </div>
               )}
             </div>
-            {currentOwner && (
-              <div className={`${homesAccountFormWrapper}`}>
-                <AccountForm />
-              </div>
-            )}
           </div>
         </div>
       )}

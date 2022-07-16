@@ -1,16 +1,23 @@
 export default function AccountForm() {
-  //   parameter: { accountBalance: number },
-  //   action: string,
-  //   amount: number
-  // ) {
-  //   const oldBalance = parameter.accountBalance;
+  // function filterAmountInput() {
+  //   const amountArray = amount.split('');
+  //   const numberVerify = amountArray.map((item: string) => parseInt(item));
+  //   return numberVerify.every((item: unknown) => !Number.isNaN(item));
+  // }
 
-  //   function newBalance() {
-  //     if (action == 'add') {
-  //       const newBalanceAmount = oldBalance + amount;
-  //       return newBalanceAmount;
-  //     }
+  // function sanitizeAmount() {
+  //   if (!filterAmountInput()) {
+  //     alert('Only use numbers for amount');
+  //     return NaN;
   //   }
+  //   const amountArray = amount.split('');
+  //   const numberVerify = amountArray.map((item: string) => parseInt(item));
+  //   if (numberVerify.filter((item: unknown) => Number.isNaN(item)).length > 0) {
+  //     return NaN;
+  //   } else {
+  //     return Number(numberVerify.join(''));
+  //   }
+  // }
 
   return (
     <div>

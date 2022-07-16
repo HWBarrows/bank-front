@@ -1,9 +1,9 @@
-import React, { useContext, useState, useReducer, ChangeEvent, MouseEvent } from 'react';
+import React, { useContext, useState, ChangeEvent, MouseEvent } from 'react';
 import { SimpleContext } from '../../context/SimpleContext';
 import './SendMoney.scss';
 
 export default function SendMoney() {
-  const { currentOwner, setCurrentOwner } = useContext(SimpleContext);
+  const { currentOwner } = useContext(SimpleContext);
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('');
@@ -203,34 +203,9 @@ export default function SendMoney() {
       setRecipient('');
       setAmount('');
       setCurrency('');
+      setConfirmInfo(false);
     }
   }
-
-  // function secondPut() {
-  //
-
-  //   console.log(sendAccount.accountActivity);
-  //   const config2 = {
-  //     method: 'PUT',
-  //     headers: { 'Content-type': 'application/json' },
-  //     body: JSON.stringify({
-  //       recipient: sendAccount._id,
-  //       accountBalance: newBalanceForSender,
-  //       accountActivity: sendAccount.accountActivity
-  //     })
-  //   };
-  //   fetch(`http://localhost:3030/account`, config2)
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       if (response.error) {
-  //         console.log(response.error);
-  //       } else {
-  //         console.log(response);
-  //       }
-  //     });
-  // }
-  // secondPut();
-  //
 
   return (
     <div>

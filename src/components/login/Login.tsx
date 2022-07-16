@@ -35,30 +35,39 @@ export default function Login() {
   }
 
   return (
-    <div>
-      <form>
-        <label>
-          Please enter your email address
-          <input
-            type="text"
-            placeholder="example@email.com"
-            value={emailInput}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setEmailInput(e.target.value)}
-          />
-        </label>
-        <label>
-          Please enter your password
-          <input
-            type="password"
-            placeholder="password"
-            value={passwordInput}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setPasswordInput(e.target.value)}
-          />
-        </label>
-        <button onClick={(e) => loginAccountOwner(e)}>Click to login</button>
-      </form>
-      <div>{responseError && <h4>{responseError?.error}</h4>}</div>
-      <NavLink to="/"> Click to go landing Page</NavLink>
+    <div className="loginWrapper">
+      <div className="prettySideBar"></div>
+      <div className="floater">
+        <div className="mainContent">
+          <form>
+            <label>
+              <input
+                type="text"
+                placeholder="Please enter your email"
+                value={emailInput}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setEmailInput(e.target.value)}
+              />
+            </label>
+            <label>
+              <input
+                type="password"
+                placeholder="Please enter your password"
+                value={passwordInput}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setPasswordInput(e.target.value)}
+              />
+            </label>
+          </form>
+          <div className="loginError">{responseError && <p>{responseError?.error}</p>}</div>
+          <div className="loginLinks">
+            <button onClick={(e) => loginAccountOwner(e)}>Login</button>
+            <p>
+              Or click <NavLink to="/signup"> here </NavLink>
+              to open a new account
+            </p>
+          </div>
+        </div>
+        <p className="loginTitle">BbhMM</p>
+      </div>
     </div>
   );
 }
