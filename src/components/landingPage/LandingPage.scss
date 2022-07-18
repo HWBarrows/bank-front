@@ -37,7 +37,18 @@
     font-family: 'Karla', sans-serif;
     // color: rgb(214, 214, 214);
      a {
+        border: solid 1px rgb(214, 214, 214);
         color: rgb(214, 214, 214);
+        text-decoration: none;
+        text-align: center;
+        margin-bottom: 1.5em;
+        padding: 1%;
+        border-radius: 5px;
+
+        &:hover {
+                background-color: white;
+                color: black;
+            }
      }
     
 }

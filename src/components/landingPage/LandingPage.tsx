@@ -11,8 +11,8 @@ export default function LandingPage() {
       <p className="title">B b h M M</p>
       <p className="subtitle">THE NEW BANK OF TODAY</p>
       <div className="links">
-        <NavLink to="/login"> Click to login </NavLink>
-        <NavLink to="/signup"> Click to open a new account </NavLink>
+        <NavLink to="/login">Login</NavLink>
+        <NavLink to="/signup">Open a new account </NavLink>
       </div>
     </div>
   );

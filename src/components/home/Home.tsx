@@ -2,7 +2,7 @@ import { useContext, useState, MouseEvent } from 'react';
 import { NavLink } from 'react-router-dom';
 import { SimpleContext } from '../../context/SimpleContext';
 import Card from '../card/Card';
-import AccountForm from '../accountForm/accountForm';
+import AccountForm from '../accountForm/AccountForm';
 import './Home.scss';
 import SendMoney from '../sendMoney/SendMoney';
 
@@ -98,7 +98,10 @@ export default function Home() {
       setHomesAccountFormWrapper('hide');
     }
   }
-
+  function displayBalance() {
+    if (accountInfo?.accountBalance)
+      return new Intl.NumberFormat().format(accountInfo?.accountBalance);
+  }
   return (
     <div className="homeWrapper">
       {!validOwner && (
@@ -144,7 +147,7 @@ export default function Home() {
                 {accountInfo && (
                   <ul>
                     <p>
-                      Account Balance: {accountInfo.accountBalance} {accountInfo.accountCurrency}
+                      Account Balance: {displayBalance()} {accountInfo.accountCurrency}
                     </p>
                     {accountInfo.accountActivity.length > 1 ? (
                       accountInfo?.accountActivity

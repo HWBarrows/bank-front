@@ -177,7 +177,7 @@ export default function CreateNew() {
         </div>
       </form>
       <button onClick={() => sendForm()}>send</button>
-      <NavLink to="/"> Click to return to Main Page</NavLink>
+      <NavLink to="/login">Go Back</NavLink>
     </div>
   );
 }
