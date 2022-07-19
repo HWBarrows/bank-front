@@ -39,14 +39,15 @@ export default function Card() {
 
   return (
     <div className="cardWrapper">
+      <div className="showCard">
+        <p>Show card details</p>
+      </div>
       {currentOwner?.cardExpiry && (
-        <div>
-          <div className="cardBody">
-            <h3>BBHM Money</h3>
-            <h2>{currentOwner.cardNumber}</h2>
-            <h4>
-              {currentOwner.cardExpiry} {currentOwner.cardSecurityCode}
-            </h4>
+        <div className="cardBody">
+          <p>{currentOwner.cardNumber}</p>
+          <div className="expiry">
+            <h4>{currentOwner.cardExpiry}</h4>
+            <h4>{currentOwner.cardSecurityCode}</h4>
           </div>
         </div>
       )}

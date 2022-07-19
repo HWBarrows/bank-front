@@ -20,3 +20,15 @@
             border-radius: 5px;
 }
 
+.confirmation {
+    button {
+        padding: 1%;
+        border-radius: 3px;
+        border:.5px solid rgb(18, 17, 17);
+        &:hover{
+            background-color: rgb(18, 17, 17);
+            border:1px solid rgb(18, 17, 17);
+            color: lightgray;
+        }
+    }
+}

@@ -1,10 +1,39 @@
 .cardWrapper {
-    border: 1.5px purple solid;
+    //border: 1.5px purple solid;
+    height: 60vh;
+    display: flex;
+    justify-content: space-around;
+    // flex-direction: column;
+    align-items: center;
     //width: 55%;
 }
 
 .cardBody {
-    border: 1px solid palevioletred;
+    background-image: url('../../assets/blurry-gradient-haikei.png');
+    background-size: cover;
     height: 250px;
-    width: 325px;
+    width: 375px;
+    border-radius: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p{
+        font-size: 1.5em;
+        color: lightgray;
+    }
+}
+
+.expiry {
+    width: 80%;
+    
+    //border: 1px solid white;
+    display: flex;
+    justify-content: space-between;
+    
+    color: lightgray;
+
+    h4 {
+            display: inline-block;
+        }
 }

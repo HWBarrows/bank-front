@@ -115,17 +115,23 @@ export default function Home() {
           <div className="accountsWrapper">
             <div className="ownerAccounts">
               <h4>Accounts</h4>
-              <ul>
-                {currentOwner.accounts.map((item, index) => (
-                  <li key={index} id={item} onClick={(e) => getAccountInfo(e)}>
-                    Account Number: {item}
-                  </li>
-                ))}
-                <li></li>
-              </ul>
+              {currentOwner.accounts.length > 0 ? (
+                <ul>
+                  {currentOwner.accounts.map((item, index) => (
+                    <li key={index} id={item} onClick={(e) => getAccountInfo(e)}>
+                      Account Number: {item}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p> No accounts to show </p>
+              )}
               <h4 onClick={() => showAccountForm()}>Create a new account</h4>
               <h4 onClick={() => showCardComponent()}>Card</h4>
               <h4 onClick={() => showSendMoney()}>Send Money</h4>
+              <button className="logout" onClick={() => logout()}>
+                Click to logout
+              </button>
             </div>
             <div className="mainHomeContent">
               <div className="ownerInfo">
@@ -139,8 +145,6 @@ export default function Home() {
                     {currentOwner.primaryAddress.zipcode}
                   </li>
                 </ul>
-
-                <button onClick={() => logout()}>Click to logout</button>
               </div>
               <div className={`${accountInfoDisplay}`}>
                 {!accountInfo?._id && <p>Click on an account to see activity</p>}
@@ -149,7 +153,7 @@ export default function Home() {
                     <p>
                       Account Balance: {displayBalance()} {accountInfo.accountCurrency}
                     </p>
-                    {accountInfo.accountActivity.length > 1 ? (
+                    {accountInfo.accountActivity.length >= 1 ? (
                       accountInfo?.accountActivity
                         .map((item, index) => (
                           <li key={index + 1}>

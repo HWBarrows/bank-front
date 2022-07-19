@@ -20,7 +20,6 @@ export default function AccountForm() {
   function getAccountCurrency(e: React.ChangeEvent<HTMLSelectElement>) {
     const value = e.target.value;
     setAccountCurrency(value);
-    console.log(accountCurrency);
     setSelectedCurrency(true);
   }
 
@@ -40,7 +39,7 @@ export default function AccountForm() {
           accountOwner: `${currentOwner._id}`,
           accountCurrency: 'EUR',
           accountType: 'checking',
-          accountBalance: 132
+          accountBalance: balance
         })
       };
       fetch(`http://localhost:3030/account`, config)
@@ -48,21 +47,44 @@ export default function AccountForm() {
         .then((response) => {
           if (response.error) {
             alert(response.error);
+            return null;
           }
           console.log(response);
+          if (setCurrentOwner && response._id) {
+            setCurrentOwner({
+              ...currentOwner,
+              accounts: [...currentOwner.accounts, response._id]
+            });
+          }
           setAccountCurrency('');
           setAccountType('');
+          setSelectedType(false);
+          setSelectedCurrency(false);
         });
+
+      // fetch(`http://localhost:3030/accountOwner/${currentOwner._id}`)
+      //   .then((response) => response.json())
+      //   .then((response) => {
+      //     if (response.error) {
+      //       alert(response.error);
+      //     } else if (setCurrentOwner) {
+      //       setCurrentOwner(response);
+      //     }
+      //   });
     }
   }
   return (
     <div className="accountFormWrapper">
+      <p>
+        Choose an account type and default currency. Your balance will be a randomly chosen number.
+        Good luck!
+      </p>
       <form>
         <div className="accountTypeWrapper">
           <label>
             <h4>Please select an account type</h4>
-            <select className="dropdownType" onChange={getAccountType}>
-              <option selected disabled>
+            <select className="dropdownType" onChange={getAccountType} defaultValue={'DEFAULT'}>
+              <option value={'DEFAULT'} disabled>
                 Choose one
               </option>
               <option value="checking">checking</option>
@@ -74,8 +96,11 @@ export default function AccountForm() {
         <div className="accountCurrencyWrapper">
           <label>
             <h4>Please select a default currency</h4>
-            <select className="dropdownCurrency" onChange={getAccountCurrency}>
-              <option selected disabled>
+            <select
+              className="dropdownCurrency"
+              onChange={getAccountCurrency}
+              defaultValue={'DEFAULT'}>
+              <option value={'DEFAULT'} disabled>
                 Choose one
               </option>
               <option value="USD">United States Dollar</option>
